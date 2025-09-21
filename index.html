@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Демо — Главная (v6)</title>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TBank Demo">
+<link rel="apple-touch-icon" href="icon.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f5f7fb;
+    --surface:#ffffff;
+    --ink:#0b1220;
+    --muted:#6b7280;
+    --blue:#2563eb;
+    --green:#16a34a;
+    --border: rgba(2,6,23,0.08);
+    --radius:20px;
+    --shadow-sm: 0 2px 6px rgba(2,6,23,0.06);
+    --shadow-md: 0 6px 14px rgba(2,6,23,0.10);
+    --accent:#ffd84d;
+    --accent-2:#ffe37a;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter, system-ui, -apple-system,'Segoe UI', Roboto, Arial;-webkit-font-smoothing:antialiased}
+  .frame{max-width:420px;margin:0 auto;overflow:hidden}
+
+  .statusbar{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid rgba(2,6,23,0.06)}
+  .statusbar .row{display:flex;align-items:center;justify-content:space-between;padding:6px 12px 0}
+  .statusbar .time{font-weight:800;font-size:14px}
+  .statusbar .icons{display:flex;gap:6px;align-items:center;font-size:12px;color:#111}
+  .battery{background:#111;color:#fff;border-radius:10px;padding:2px 6px;font-weight:900;font-size:11px}
+  .appbar{display:flex;align-items:center;justify-content:center;padding:8px 14px 12px}
+  .title{font-weight:900;font-size:18px}
+
+  .content{padding:8px 12px 92px}
+
+  /* Унифицированные карточки */
+  .card-btn{display:flex;align-items:center;gap:12px;width:100%;background:var(--surface);border-radius:var(--radius);padding:16px;border:1px solid var(--border);box-shadow:var(--shadow-sm);margin:8px 0;cursor:pointer;transition:transform .06s ease, box-shadow .16s ease, background-color .16s ease}
+  .card-btn:hover{box-shadow:var(--shadow-md); background:#fcfcff}
+  .card-btn:active{transform:translateY(1px)}
+  .card-btn:focus-visible{outline:3px solid #93c5fd; outline-offset:2px}
+  .circle{width:44px;height:44px;border-radius:999px;background:linear-gradient(180deg,#1d4ed8,#153ea8);display:flex;align-items:center;justify-content:center;color:#fff;flex:0 0 44px}
+  .circle svg{width:22px;height:22px;fill:#fff}
+  .col{display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:0;flex:1}
+  .name{font-weight:900;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#1f2937;line-height:1.2}
+  .sub{font-size:13px;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2}
+  .right{margin-left:auto;display:flex;align-items:center;gap:8px;flex:0 0 auto}
+  .value{font-weight:900;font-size:16px;white-space:nowrap}
+  .badge{font-size:12px;padding:6px 8px;border-radius:999px;background:rgba(22,163,74,0.12);color:#16a34a;font-weight:800;border:1px solid rgba(22,163,74,0.15)}
+
+  button.card-btn {
+    all: unset;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 16px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    margin: 8px 0;
+    cursor: pointer;
+    transition: transform .06s ease, box-shadow .16s ease, background-color .16s ease;
+  
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;}
+
+
+  /* deposit page */
+  .hero{background:linear-gradient(180deg,#202a3b,#1a2332);padding:22px 16px 26px;color:#fff;border-bottom-left-radius:24px;border-bottom-right-radius:24px;box-shadow:var(--shadow-md)}
+  .back{background:rgba(255,255,255,0.14);border:0;color:#fff;border-radius:12px;padding:10px 14px;font-weight:900;cursor:pointer}
+  .label{font-size:14px;color:#e5ecf7;margin-top:8px}
+  .sum{font-size:36px;font-weight:900;margin-top:4px}
+  .caption{font-size:13px;color:#c2cbd6;margin-top:6px}
+  .body{padding:12px}
+  .promo{background:#fff;border-radius:20px;padding:16px;border:1px solid rgba(2,6,23,0.06);box-shadow:var(--shadow-sm)}
+  .promo .inner{background:linear-gradient(180deg,#fff7c6,#fff3ad);border-radius:16px;padding:14px;border:1px solid rgba(250,204,21,0.38)}
+  .btn-yellow{display:inline-block;background:linear-gradient(180deg,var(--accent),var(--accent-2));padding:12px 16px;border-radius:14px;font-weight:900;color:#111;border:0;box-shadow:0 2px 0 rgba(0,0,0,0.06);cursor:pointer}
+  .section-title{font-weight:900;margin:14px 4px 6px;color:#1f2937}
+  .dashed{border-radius:16px;border:1px dashed rgba(2,6,23,0.12);padding:12px;background:#fff;color:#6b7280}
+
+  /* bottom nav */
+  .navbar {
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+    border-top: 1px solid rgba(2,6,23,0.06);
+    display: flex;
+    justify-content: space-around;
+    padding: 6px 0 8px;
+  }
+  .nav {
+    flex: 1;
+    text-align: center;
+    font-size: 11px;
+    color: #6b7280;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    position: relative;
+  }
+  .nav svg {
+    width: 22px;
+    height: 22px;
+  }
+  .nav.active {
+    color: #1d4ed8;
+    font-weight: 900;
+  }
+  .nav .dot {
+    position: absolute;
+    top: 0;
+    right: 20%;
+    background: #ef4444;
+    color: #fff;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 6px;
+  }
+
+</style>
+</head>
+<body>
+<div class="frame">
+  <header class="statusbar">
+    <div class="row">
+      <div class="time" id="clock">13:49</div>
+      <div class="icons">LTE <span class="battery" id="bat">53%</span></div>
+    </div>
+    <div class="appbar"><div class="title" id="barTitle">Главная</div></div>
+  </header>
+
+  <main id="home" class="content">
+    <div class="card-btn">
+      <div class="circle"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h14v2H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14v2H5a4 4 0 0 1-4-4V7z"/><path d="M21 11a2 2 0 0 1 0 4h-2v-4h2z"/></svg></div>
+      <div class="col">
+        <div class="name">Накопительный счёт</div>
+        <div class="sub">Пополняемый</div>
+      </div>
+      <div class="right"><div class="value">5,49 ₽</div></div>
+    </div>
+
+    <button class="card-btn" id="openDeposit" type="button">
+      <div class="circle"><svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 0-2 2v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-4V4a2 2 0 0 0-2-2zM12 9a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/></svg></div>
+      <div class="col">
+        <div class="name">Вклад</div>
+        <div class="sub">На 1 месяц</div>
+      </div>
+      <div class="right"><div class="value" id="homeDepositValue">—</div></div>
+    </button>
+
+    <button class="card-btn" id="openInvest" type="button">
+      <div class="circle"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h3V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1h3a2 2 0 0 1 2 2v3H3V7zM3 13h18v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4z"/></svg></div>
+      <div class="col">
+        <div class="name">Инвестиции</div>
+        <div class="sub">Портфель</div>
+      </div>
+      <div class="right"><div class="value">145,92 ₽</div><span class="badge">+40 ₽ • 37,9%</span></div>
+    </button>
+
+    <div class="card-btn">
+      <div class="circle"><svg viewBox="0 0 24 24"><path d="M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm5 18a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg></div>
+      <div class="col">
+        <div class="name">Мобильная связь</div>
+        <div class="sub">Т‑Мобайл</div>
+      </div>
+    </div>
+
+    <div class="card-btn">
+      <div class="circle"><svg viewBox="0 0 24 24"><path d="M12 2l7 4v6c0 5-3.5 9.74-7 10-3.5-.26-7-5-7-10V6l7-4z"/></svg></div>
+      <div class="col">
+        <div class="name">1 полис</div>
+        <div class="sub">Страхование</div>
+      </div>
+    </div>
+  </main>
+
+  <section id="deposit" style="display:none">
+    <div class="hero">
+      <button class="back" id="back" type="button">← Назад</button>
+      <div class="label">Вклад</div>
+      <div id="depSum" class="sum">—</div>
+      <div class="caption">На 1 месяц</div>
+    </div>
+    <div class="body">
+      <div class="promo">
+        <div class="inner">
+          <div style="font-weight:900;font-size:18px;line-height:1.2;margin-bottom:6px;">Пополните вклад, чтобы зафиксировать ставку 17%</div>
+          <div style="color:#374151;font-size:14px;margin-bottom:12px;">Пока на вкладе нет денег, ставка может измениться</div>
+          <button class="btn-yellow" type="button">Пополнить вклад</button>
+        </div>
+      </div>
+      <div class="section-title">Операции</div>
+      <div class="dashed">Нет пополнений в сентябре</div>
+      <div class="section-title">Копить вместе с близкими</div>
+      <div class="dashed">Пригласите ещё участников, чтобы пополнять вклад вместе</div>
+    </div>
+  </section>
+
+  <section id="invest" style="display:none">
+    <div class="hero">
+      <button class="back" id="backFromInvest" type="button">← Назад</button>
+      <div class="label">Инвестиции</div>
+      <div class="sum" id="investSum">145,92 ₽</div>
+      <div class="caption">Портфель</div>
+    </div>
+    <div class="body">
+      <div class="promo">
+        <div style="font-weight:900;font-size:18px;line-height:1.2;margin-bottom:6px;">Начните с пополнения брокерского счёта</div>
+        <div style="color:#374151;font-size:14px;margin-bottom:12px;">Комиссии от 0,03%. Риски инвестиций — это важно.</div>
+        <button class="btn-yellow" type="button">Пополнить счёт</button>
+      </div>
+    </div>
+  </section>
+
+  
+  <nav class="navbar">
+    <div class="nav active" id="navHome">
+      <svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9v9a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-4H9v4a2 2 0 0 1-2 2H3z"/></svg>
+      Главная
+    </div>
+    <div class="nav">
+      <svg viewBox="0 0 24 24"><path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h10v2H4v-2z"/></svg>
+      Платежи
+    </div>
+    <div class="nav">
+      <svg viewBox="0 0 24 24"><path d="M12 2l9 4v6c0 5-4 10-9 10S3 17 3 12V6l9-4z"/></svg>
+      Город
+    </div>
+    <div class="nav">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Чат <span class="dot">32</span>
+    </div>
+    <div class="nav">
+      <svg viewBox="0 0 24 24"><path d="M12 7a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v2h-2v2h-4v-2H8v-2a2 2 0 0 1 2-2h2V9a2 2 0 0 1 2-2z"/></svg>
+      Ещё
+    </div>
+  </nav>
+
+</div>
+
+<script>
+  const depositAmount = 1875166.83;
+  const fmt = n => new Intl.NumberFormat('ru-RU',{style:'currency',currency:'RUB',minimumFractionDigits:0,maximumFractionDigits:2}).format(n);
+  document.getElementById('homeDepositValue').textContent = fmt(depositAmount);
+  document.getElementById('depSum').textContent = fmt(depositAmount);
+
+  const home = document.getElementById('home');
+  const deposit = document.getElementById('deposit');
+  const invest = document.getElementById('invest');
+  const barTitle = document.getElementById('barTitle');
+
+  function show(section, title){
+    home.style.display = section==='home' ? 'block' : 'none';
+    deposit.style.display = section==='deposit' ? 'block' : 'none';
+    invest.style.display = section==='invest' ? 'block' : 'none';
+    barTitle.textContent = title;
+    window.scrollTo(0,0);
+  }
+
+  document.getElementById('openDeposit').addEventListener('click',()=>show('deposit','Вклад'),{passive:true});
+  document.getElementById('openInvest').addEventListener('click',()=>show('invest','Инвестиции'),{passive:true});
+  document.getElementById('back').addEventListener('click',()=>show('home','Главная'),{passive:true});
+  document.getElementById('backFromInvest').addEventListener('click',()=>show('home','Главная'),{passive:true});
+
+  function pad(n){return n<10?"0"+n:n}
+  function tick(){const d=new Date();document.getElementById('clock').textContent=`${pad(d.getHours())}:${pad(d.getMinutes())}`;}
+  tick();setInterval(tick,10000);
+</script>
+</body>
+</html>
